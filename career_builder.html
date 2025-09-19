@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Skills Quiz | GenZ Vibes</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+    body { transition:0.3s; line-height:1.6; font-size:16px; background:#121212; color:#f0f0f0; }
+    body.light { background:#f9f9f9; color:#111; }
+
+    .top-nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.2rem; position:sticky; top:0; z-index:100; border-bottom:2px solid #00e5ff; background:#1f1f1f; transition:0.3s; flex-wrap:wrap; }
+    body.light .top-nav { background:#fff; }
+    .top-nav .logo { font-size:1.3rem; font-weight:bold; color:#00e5ff; }
+    .top-nav ul { display:flex; list-style:none; gap:1rem; flex-wrap:wrap; margin-top:0.5rem; }
+    .top-nav ul li a { color:#f0f0f0; text-decoration:none; font-weight:500; transition:0.3s; }
+    body.light .top-nav ul li a { color:#111; }
+    .top-nav ul li a:hover { color:#00e5ff; }
+    .theme-toggle { background:#00e5ff; border:none; padding:6px 12px; border-radius:8px; cursor:pointer; font-weight:bold; color:#121212; margin-left:1rem; }
+
+    .quiz-container { max-width:900px; margin:3rem auto; padding:0 1rem; text-align:center; }
+    .quiz-container h1 { font-size:2rem; margin-bottom:1rem; color:#00e5ff; }
+    .quiz-container p { margin-bottom:1.5rem; color:#ccc; font-size:1rem; }
+    body.light .quiz-container p { color:#555; }
+
+    select, input[type=file] { margin:0.8rem 0; padding:0.7rem; border-radius:8px; border:none; width:100%; background:#272727; color:#f0f0f0; transition:0.3s; }
+    body.light select, body.light input[type=file] { background:#eee; color:#111; }
+
+    .skills-section { margin:2rem 0; text-align:left; }
+    .skills-section h2 { margin-bottom:1rem; color:#00e5ff; }
+    .skill { margin:1rem 0; display:flex; align-items:center; justify-content:space-between; }
+    .skill label { flex:1; font-size:0.9rem; }
+    .skill span { font-weight:bold; width:30px; text-align:right; }
+    .skill input[type=range] { flex:2; accent-color:#00e5ff; margin-left:1rem; }
+
+    button { padding:0.8rem 1.5rem; margin:0.5rem; border:none; border-radius:8px; background:#00e5ff; color:#121212; cursor:pointer; font-weight:bold; transition:0.2s; }
+    button:hover { transform:scale(1.05); }
+
+    #quizResult { display:none; text-align:center; padding:1.5rem; margin:auto; }
+    #quizResult h2 { color:#00e5ff; margin-bottom:1rem; }
+    #careerOutput, #careerTips, #aiInsights { margin:0.5rem 0; font-size:0.95rem; color:#ccc; text-align:left; }
+    body.light #careerOutput, body.light #careerTips, body.light #aiInsights { color:#111; }
+    #aiInsights { background:#1f1f1f; padding:1rem; border-radius:10px; margin-top:1rem; }
+    body.light #aiInsights { background:#eee; }
+
+    .top-careers { max-width:900px; margin:2rem auto; text-align:center; }
+    .top-careers h2 { color:#00e5ff; margin-bottom:1rem; }
+    .career-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+    .career-card { background:#272727; padding:1rem; border-radius:12px; box-shadow:0 0 15px rgba(0,229,255,0.2); transition:0.3s; }
+    .career-card:hover { transform:translateY(-5px); box-shadow:0 0 25px rgba(0,229,255,0.4); }
+
+    footer { text-align:center; padding:1.5rem; background:#1f1f1f; border-top:2px solid #00e5ff; margin-top:3rem; }
+    body.light footer { background:#f9f9f9; color:#111; }
+
+    @media (max-width:600px) { .quiz-container h1 { font-size:1.6rem; } .top-nav { flex-direction:column; align-items:flex-start; } }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="top-nav">
+    <div class="logo">✨ GenZ Vibes ✨</div>
+    <ul id="nav-links">
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="about_us.html">About Us</a></li>
+    <li><a href="career_builder.html">Careers</a></li>
+    <li><a href="quiz.html">Career Quiz 🚀</a></li>
+    <li><a href="gemini.html">Gemini AI ♊</a></li>
+    <li><a href="admin.html">Queries</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="login.html" id="loginLink">Login / Register</a></li>
+    <li><button id="logout-btn" style="display:none;">Logout</button></li>
+  </ul>
+    <button class="theme-toggle" id="themeToggle">☀️/🌙</button>
+  </nav>
+
+  <!-- QUIZ CONTAINER -->
+  <div class="quiz-container">
+    <h1>Career Skills & Pathway Quiz 🎯</h1>
+    <p>Flex your skills, upload your resume, and let Gemini AI guide your career 🚀</p>
+
+    <label for="education">📚 Select your education level:</label>
+    <select id="education">
+      <option value="">--Choose one--</option>
+      <option>High School</option>
+      <option>Undergraduate</option>
+      <option>Bachelor’s Degree</option>
+      <option>Master’s Degree</option>
+      <option>PhD</option>
+    </select>
+
+    <label for="resume">📄 Upload your resume:</label>
+    <input type="file" id="resume" accept=".pdf,.doc,.docx">
+    <div id="resumeStatus">No file uploaded yet.</div>
+
+    <div class="skills-section">
+      <h2>Rate your skills (slide ➡️)</h2>
+      <div class="skill"><label>Problem-Solving</label><span id="psValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Problem-Solving" oninput="document.getElementById('psValue').innerText=this.value"></div>
+      <div class="skill"><label>Communication</label><span id="commValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Communication" oninput="document.getElementById('commValue').innerText=this.value"></div>
+      <div class="skill"><label>Technical</label><span id="techValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Technical" oninput="document.getElementById('techValue').innerText=this.value"></div>
+      <div class="skill"><label>Creativity</label><span id="creValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Creativity" oninput="document.getElementById('creValue').innerText=this.value"></div>
+      <div class="skill"><label>Leadership</label><span id="leadValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Leadership" oninput="document.getElementById('leadValue').innerText=this.value"></div>
+      <div class="skill"><label>Teamwork</label><span id="teamValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Teamwork" oninput="document.getElementById('teamValue').innerText=this.value"></div>
+      <div class="skill"><label>Analytical Thinking</label><span id="anaValue">5</span><input type="range" min="1" max="10" value="5" data-skill="Analytical Thinking" oninput="document.getElementById('anaValue').innerText=this.value"></div>
+    </div>
+
+    <button id="submitBtn">Submit ✅</button>
+    <button id="careerBtn">Get Personalized Career Paths 🌟</button>
+
+    <div id="quizResult">
+      <h2>Your Career Matches 🚀</h2>
+      <p id="careerOutput"></p>
+      <pre id="careerTips"></pre>
+      <button id="aiBtn">Get AI Insights 🤖</button>
+      <div id="aiInsights" style="display:none;"></div>
+      <button onclick="location.reload()">Try Again 🔄</button>
+    </div>
+
+    <div class="top-careers">
+      <h2>Explore Popular Careers 🌟</h2>
+      <div class="career-grid">
+        <div class="career-card"><h3>Software Developer</h3><button onclick="location.href='software.html'">Explore</button></div>
+        <div class="career-card"><h3>Data Analyst</h3><button onclick="location.href='data.html'">Explore</button></div>
+        <div class="career-card"><h3>UX Designer</h3><button onclick="location.href='design.html'">Explore</button></div>
+        <div class="career-card"><h3>Marketing Specialist</h3><button onclick="location.href='marketing.html'">Explore</button></div>
+        <div class="career-card"><h3>Entrepreneur</h3><button onclick="location.href='entrepreneur.html'">Explore</button></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 GenZ Vibes — Powered by Google Gemini AI ✨</p>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const themeBtn = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    if(savedTheme === "light") body.classList.add("light");
+    themeBtn.onclick = () => { body.classList.toggle("light"); localStorage.setItem("theme", body.classList.contains("light") ? "light" : "dark"); }
+
+    let userSkills = {};
+    let preferencesSet = false;
+
+    document.querySelectorAll("input[type=range]").forEach(slider => {
+      slider.addEventListener("input", () => { preferencesSet = true; });
+    });
+
+    // Resume upload with AI analysis
+    document.getElementById("resume").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const status = document.getElementById("resumeStatus");
+      status.innerText = `Uploading ${file.name}... ⏳`;
+
+      // Simulate API call to Google Cloud AI (replace with real API endpoint)
+      setTimeout(async () => {
+        // Example: send resume to AI endpoint, get extracted skills
+        status.innerText = `Gemini AI analyzed your resume: Strong in Technical, Analytical Thinking, Communication.`;
+        // Optionally update sliders dynamically based on AI suggestions
+      }, 2000);
+    });
+
+    // Submit skills
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      document.querySelectorAll("input[type=range]").forEach(slider => {
+        userSkills[slider.dataset.skill] = parseInt(slider.value);
+      });
+      if(!preferencesSet) { alert("⚠️ Slide the bars first!"); return; }
+      alert("Skills recorded! Now hit 'Get Personalized Career Paths 🌟'");
+    });
+
+    // Career matching with AI simulation
+    document.getElementById("careerBtn").addEventListener("click", async () => {
+      if(!preferencesSet) { alert("⚠️ Slide the bars first!"); return; }
+      const careerOutput = document.getElementById("careerOutput");
+      const careerTips = document.getElementById("careerTips");
+      const quizResult = document.getElementById("quizResult");
+      careerOutput.innerText = "Fetching personalized careers from Gemini AI... ⏳";
+
+      // Simulate AI call
+      setTimeout(() => {
+        const topCareers = [
+          "Data Analyst — Score: 28",
+          "AI Researcher — Score: 27",
+          "Software Developer — Score: 26"
+        ];
+        careerOutput.innerText = topCareers.join("\n");
+        careerTips.innerText = "💡 Gemini AI Tip: Focus on Communication & Leadership to unlock management tracks!";
+        quizResult.style.display = "block";
+      }, 2000);
+    });
+
+    // AI Insights button
+    document.getElementById("aiBtn").addEventListener("click", async () => {
+      const insightsBox = document.getElementById("aiInsights");
+      insightsBox.style.display = "block";
+      insightsBox.innerText = "Gemini AI is generating insights... ⏳";
+
+      setTimeout(() => {
+        insightsBox.innerText =
+          "✨ Gemini AI Insights ✨\n" +
+          "- Strong Technical & Analytical skills → Consider Data Analysis, AI Research, Software Dev.\n" +
+          "- Improve Communication & Leadership → Management & Entrepreneurial roles open up.\n" +
+          "- Recommended: Take a project-based AI/ML course, build a portfolio, contribute to GitHub.\n" +
+          "- Tip: Networking & soft skills are equally vital for career growth.";
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

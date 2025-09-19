@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us | GenZ Vibes</title>
+<style>
+/* ===== GLOBAL ===== */
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', sans-serif; }
+body { background:#121212; color:#f0f0f0; line-height:1.6; transition:0.3s; }
+body.light { background:#f9f9f9; color:#111; }
+
+/* ===== NAVIGATION ===== */
+.top-nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#1f1f1f; position:sticky; top:0; border-bottom:2px solid #00e5ff; transition:0.3s; }
+body.light .top-nav { background:#fff; border-color:#00e5ff; }
+.top-nav .logo { font-size:1.5rem; font-weight:bold; color:#00e5ff; }
+.top-nav ul { display:flex; list-style:none; gap:2rem; }
+.top-nav ul li a { color:#f0f0f0; text-decoration:none; font-weight:500; transition:color 0.3s; }
+body.light .top-nav ul li a { color:#111; }
+.top-nav ul li a:hover { color:#00e5ff; }
+.theme-toggle, #logout-btn { background:#00e5ff; border:none; padding:6px 12px; border-radius:8px; cursor:pointer; font-weight:bold; color:#121212; }
+
+/* ===== CONTACT FORM ===== */
+.contact { max-width:600px; margin:4rem auto; padding:0 2rem; }
+.contact h1 { text-align:center; font-size:2.5rem; margin-bottom:1.5rem; color:#00e5ff; }
+.contact form { display:flex; flex-direction:column; gap:1rem; }
+.contact input, .contact textarea { padding:0.8rem; border-radius:8px; border:none; font-size:1rem; background:#272727; color:#f0f0f0; resize:none; transition:0.3s; }
+body.light .contact input, body.light .contact textarea { background:#eee; color:#111; }
+.contact input:focus, .contact textarea:focus { outline:2px solid #00e5ff; }
+
+.contact-buttons { display:flex; gap:1rem; }
+.contact button { flex:1; padding:0.8rem; border-radius:8px; border:none; font-size:1rem; font-weight:bold; cursor:pointer; transition: transform 0.2s, background 0.3s; background:#00e5ff; color:#121212; }
+.contact button:hover { transform: scale(1.05); background:#00cfe0; }
+@media (max-width:600px) { .contact-buttons { flex-direction:column; } }
+
+/* ===== TOAST NOTIFICATION ===== */
+.toast {
+  visibility:hidden; min-width:250px; margin-left:-125px;
+  background:#272727; color:#fff; text-align:center; border-radius:12px;
+  padding:16px; position:fixed; z-index:1; left:50%; bottom:30px;
+  font-size:1rem; box-shadow:0 0 10px rgba(0,229,255,0.4); transition:all 0.5s;
+}
+.toast.show { visibility:visible; animation:fadeIn 0.5s, fadeOut 0.5s 2.5s; }
+.toast.success { background:#2ecc71; }
+.toast.error { background:#e74c3c; }
+@keyframes fadeIn { from { bottom:0; opacity:0; } to { bottom:30px; opacity:1; } }
+@keyframes fadeOut { from { bottom:30px; opacity:1; } to { bottom:0; opacity:0; } }
+
+/* ===== FOOTER ===== */
+footer { text-align:center; padding:2rem; background:#1f1f1f; border-top:2px solid #00e5ff; margin-top:4rem; transition:0.3s; }
+body.light footer { background:#f9f9f9; color:#111; }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="top-nav">
+  <div class="logo">✨ GenZ Vibes ✨</div>
+  <ul id="nav-links">
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="about_us.html">About Us</a></li>
+    <li><a href="career_builder.html">Careers</a></li>
+    <li><a href="quiz.html">Career Quiz 🚀</a></li>
+    <li><a href="gemini.html">Gemini AI ♊</a></li>
+    <li><a href="admin.html">Queries</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="login.html" id="loginLink">Login / Register</a></li>
+    <li><button id="logout-btn" style="display:none;">Logout</button></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle">☀️/🌙</button>
+</nav>
+
+<!-- CONTACT FORM -->
+<section class="contact">
+  <h1>Contact Us 📩</h1>
+  <form id="contactForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+    <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
+    <div class="contact-buttons">
+      <button type="submit">Send Message ✅</button>
+    </div>
+  </form>
+</section>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- FIREBASE + SCRIPT -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCv0nOOOqO2Te_RH3ZHOjmq-Q2VKLEYfCs",
+  authDomain: "career-advisor-ai-470418.firebaseapp.com",
+  projectId: "career-advisor-ai-470418",
+  storageBucket: "career-advisor-ai-470418.appspot.com",
+  messagingSenderId: "768473952136",
+  appId: "1:768473952136:web:10b2834534de3cdfed543d",
+  measurementId: "G-3VT3TJ9886"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const contactForm = document.getElementById("contactForm");
+const toast = document.getElementById("toast");
+const loginLink = document.getElementById("loginLink");
+const logoutBtn = document.getElementById("logout-btn");
+
+// ===== TOAST FUNCTION =====
+function showToast(message, type="success") {
+  toast.textContent = message;
+  toast.className = `toast show ${type}`;
+  setTimeout(() => { toast.className = toast.className.replace("show",""); }, 3000);
+}
+
+// ===== THEME TOGGLE =====
+const body = document.body;
+const themeBtn = document.getElementById("themeToggle");
+const savedTheme = localStorage.getItem("theme") || "dark";
+if(savedTheme === "light") body.classList.add("light");
+themeBtn.onclick = () => {
+  body.classList.toggle("light");
+  localStorage.setItem("theme", body.classList.contains("light") ? "light" : "dark");
+};
+
+// ===== AUTH CHECK =====
+onAuthStateChanged(auth, (user) => {
+  if(user){
+    loginLink.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+  } else {
+    // not logged in
+    window.location.href = "login.html";
+  }
+});
+
+// ===== LOGOUT =====
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
+};
+
+// ===== FORM HANDLING =====
+contactForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  if (!name || !email || !message) {
+    showToast("Please fill all fields! ❌","error");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "queries"), { name, email, message, resolved:false, timestamp:serverTimestamp() });
+    showToast("Message sent! ✅ We’ll get back to you soon.","success");
+    contactForm.reset();
+  } catch (err) {
+    console.error(err);
+    showToast("Oops! Something went wrong. ❌","error");
+  }
+});
+</script>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 GenZ Vibes — All the vibes, none of the cringe. ✌️</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Skills Quiz | GenZ Vibes</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+body { background:#121212; color:#f0f0f0; line-height:1.6; transition:0.3s; }
+
+/* NAV */
+.top-nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#1f1f1f; position:sticky; top:0; border-bottom:2px solid #00e5ff; z-index:100; flex-wrap:wrap; }
+.top-nav .logo { font-size:1.5rem; font-weight:bold; color:#00e5ff; }
+.top-nav ul { display:flex; flex-wrap:wrap; list-style:none; gap:1rem; align-items:center; margin-top:0.5rem; }
+.top-nav ul li a { color:#f0f0f0; text-decoration:none; font-weight:500; transition:0.3s; }
+.top-nav ul li a:hover { color:#00e5ff; }
+
+/* PROGRESS BAR */
+.progress { height:8px; background:#333; border-radius:6px; overflow:hidden; margin:1rem auto; max-width:800px; }
+.progress-bar { height:100%; width:0%; background:#00e5ff; transition:width 0.3s; }
+
+/* QUIZ */
+.quiz-container { max-width:800px; margin:2rem auto; padding:0 1rem; text-align:center; }
+.quiz-container h1 { font-size:2rem; margin-bottom:1rem; color:#00e5ff; animation:fadeIn 1s; }
+.quiz-container p { margin-bottom:1rem; color:#ccc; font-size:1rem; animation:fadeIn 1.2s; }
+#quizQuestion { font-size:1.3rem; margin:1rem 0; animation:fadeIn 0.8s; }
+
+#quizOptions button {
+  display:block; width:100%; padding:0.8rem; margin:0.5rem 0; background:#272727;
+  color:#f0f0f0; border:none; border-radius:8px; cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+#quizOptions button:hover { transform:translateY(-3px); box-shadow:0 0 10px rgba(0,229,255,0.3); }
+#quizOptions button.selected { background:#00e5ff; color:#121212; }
+
+.nav-buttons { margin-top:1rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; }
+.nav-buttons button { flex:1; padding:0.8rem; border:none; border-radius:8px; background:#00e5ff; color:#121212; font-weight:bold; cursor:pointer; transition:0.2s; }
+.nav-buttons button:hover { transform:scale(1.05); }
+
+#quizResult { display:none; text-align:center; padding:1.5rem; max-width:800px; margin:auto; animation:fadeIn 1s; }
+#quizResult h2 { color:#00e5ff; margin-bottom:1rem; }
+#careerOutput, #careerTips, #aiInsights { color:#ccc; font-size:1rem; margin-bottom:1rem; text-align:left; background:#1f1f1f; padding:1rem; border-radius:10px; }
+#quizResult button { padding:0.8rem 1.5rem; margin-top:1rem; border:none; border-radius:8px; background:#00e5ff; color:#121212; cursor:pointer; font-weight:bold; transition:0.2s; }
+#quizResult button:hover { transform:scale(1.05); }
+
+.exploreBtn { padding:0.5rem 1rem; margin:0.3rem; border:none; border-radius:6px; cursor:pointer; background:#00e5ff; color:#121212; font-weight:bold; transition:0.2s; }
+.exploreBtn:hover { transform:scale(1.05); }
+
+/* FOOTER */
+footer { text-align:center; padding:2rem; background:#1f1f1f; border-top:2px solid #00e5ff; margin-top:2rem; font-size:0.9rem; }
+
+/* MOBILE FIXES */
+@media(max-width:600px){
+  .top-nav { flex-direction:column; align-items:flex-start; padding:1rem; }
+  .top-nav ul { flex-direction:column; gap:0.5rem; width:100%; }
+  .quiz-container h1 { font-size:1.5rem; }
+  #quizQuestion { font-size:1.1rem; }
+  #quizOptions button { font-size:0.9rem; padding:0.7rem; }
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="logo">✨ GenZ Vibes ✨</div>
+  <ul id="nav-links">
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="about_us.html">About Us</a></li>
+    <li><a href="career_builder.html">Careers</a></li>
+    <li><a href="quiz.html">Career Quiz 🚀</a></li>
+    <li><a href="gemini.html">Gemini AI ♊</a></li>
+    <li><a href="admin.html">Queries</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="login.html" id="loginLink">Login / Register</a></li>
+    <li><button id="logout-btn" style="display:none;">Logout</button></li>
+  </ul>
+</nav>
+
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="quiz-container">
+  <h1>Career Skills Quiz 🎯</h1>
+  <p>Answer these 15 fun questions to discover your best career fit and get AI-powered career insights! 🚀</p>
+
+  <h2 id="quizQuestion"></h2>
+  <div id="quizOptions"></div>
+
+  <div class="nav-buttons">
+    <button id="prevBtn">⬅️ Previous</button>
+    <button id="nextBtn">Next ➡️</button>
+  </div>
+
+  <div id="quizResult">
+    <h2>Your Career Matches 🚀</h2>
+    <div id="careerOutput"></div>
+    <div id="careerTips"></div>
+    <div id="aiInsights" style="display:none;"></div>
+    <button onclick="location.reload()">Try Again 🔄</button>
+    <button onclick="shareResult()">Share 📲</button>
+    <button id="aiBtn">Get AI Insights 🤖</button>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 GenZ Vibes — Powered by Gemini AI ✨</p>
+</footer>
+
+<script>
+// Quiz Data
+const quizData = [
+  {q:"How confident are you with problem-solving?", options:["Not confident","Somewhat confident","Very confident"], skill:"Problem-Solving"},
+  {q:"How well do you communicate your ideas?", options:["Poor","Average","Excellent"], skill:"Communication"},
+  {q:"Can you code or work with technical tools?", options:["Nope","Somewhat","Pro-level"], skill:"Technical"},
+  {q:"Do you enjoy working in teams?", options:["Hate it","Sometimes","Love it"], skill:"Teamwork"},
+  {q:"How creative are you?", options:["Low","Medium","High"], skill:"Creativity"},
+  {q:"Can you handle deadlines?", options:["No","Sometimes","Always"], skill:"Time Management"},
+  {q:"Do you enjoy analyzing data?", options:["Not at all","Sometimes","Yes!"], skill:"Analytical Thinking"},
+  {q:"Are you good at leadership?", options:["Never","Sometimes","Always"], skill:"Leadership"},
+  {q:"Can you adapt to changing environments?", options:["Struggle","Sometimes","Easily"], skill:"Adaptability"},
+  {q:"Do you enjoy teaching or mentoring?", options:["No","Maybe","Yes"], skill:"Mentoring"},
+  {q:"Are you good at making decisions?", options:["Nope","Sometimes","Yes"], skill:"Decision Making"},
+  {q:"Do you have a strong work ethic?", options:["Weak","Average","Strong"], skill:"Work Ethic"},
+  {q:"Do you enjoy research or learning new things?", options:["Nah","Sometimes","Love it"], skill:"Learning"},
+  {q:"Are you detail-oriented?", options:["Not really","Somewhat","Very"], skill:"Attention to Detail"},
+  {q:"Do you thrive in high-pressure situations?", options:["No","Sometimes","Yes"], skill:"Stress Management"},
+];
+
+// Careers
+const careers = [
+  {name:"Software Developer", skills:{"Technical":3,"Problem-Solving":2,"Attention to Detail":2,"Time Management":1}},
+  {name:"Data Analyst", skills:{"Analytical Thinking":3,"Technical":2,"Attention to Detail":2,"Problem-Solving":1}},
+  {name:"UX Designer", skills:{"Creativity":3,"Communication":2,"Problem-Solving":1,"Adaptability":2}},
+  {name:"Marketing Specialist", skills:{"Creativity":3,"Communication":2,"Adaptability":2,"Analytical Thinking":1}},
+  {name:"Entrepreneur", skills:{"Leadership":2,"Creativity":3,"Adaptability":2,"Decision Making":2}}
+];
+
+let currentQ = 0;
+let userSkills = Array(quizData.length).fill(null);
+
+const questionEl = document.getElementById('quizQuestion');
+const optionsEl = document.getElementById('quizOptions');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressBar = document.getElementById('progressBar');
+
+function showQuestion(index){
+  const q = quizData[index];
+  questionEl.innerText = q.q;
+  optionsEl.innerHTML = "";
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.classList.toggle("selected", userSkills[index] === i+1);
+    btn.onclick = ()=>{ userSkills[index] = i+1; showQuestion(index); updateNav(); };
+    optionsEl.appendChild(btn);
+  });
+  updateNav();
+  updateProgress();
+}
+
+function updateNav(){
+  prevBtn.disabled = currentQ===0;
+  nextBtn.innerText = currentQ===quizData.length-1 ? "Finish ✅" : "Next ➡️";
+  nextBtn.disabled = userSkills[currentQ]===null;
+}
+
+function updateProgress(){
+  progressBar.style.width = ((currentQ+1)/quizData.length)*100 + "%";
+}
+
+prevBtn.addEventListener('click', ()=>{ if(currentQ>0) currentQ--; showQuestion(currentQ); });
+nextBtn.addEventListener('click', ()=>{
+  if(currentQ<quizData.length-1){ currentQ++; showQuestion(currentQ); }
+  else { showResult(); }
+});
+
+function showResult(){
+  document.getElementById('quizQuestion').style.display='none';
+  document.getElementById('quizOptions').style.display='none';
+  prevBtn.style.display='none';
+  nextBtn.style.display='none';
+
+  const totalScores = careers.map(c=>{
+    let score=0;
+    for(let i=0;i<quizData.length;i++){
+      const skill = quizData[i].skill;
+      score += (userSkills[i]||0)*(c.skills[skill]||0);
+    }
+    score += Math.floor(Math.random()*2);
+    return {career:c.name, score};
+  }).sort((a,b)=>b.score-a.score).slice(0,3);
+
+  const careerOutput = document.getElementById('careerOutput');
+  const careerTips = document.getElementById('careerTips');
+  careerOutput.innerHTML = "Top AI Career Matches 🚀<br><br>";
+  careerTips.innerHTML = "";
+
+  const pages = {
+    "Software Developer":'software.html',
+    "Data Analyst":'data.html',
+    "UX Designer":'design.html',
+    "Marketing Specialist":'marketing.html',
+    "Entrepreneur":'entrepreneur.html'
+  };
+
+  totalScores.forEach((c,i)=>{
+    careerTips.innerHTML += `#${i+1}: ${c.career} — Score: ${c.score}<br>`;
+    const btn = document.createElement("button");
+    btn.classList.add("exploreBtn");
+    const link = document.createElement("a");
+    link.href = pages[c.career];
+    link.innerText = "Explore 🔍";
+    link.style.color="#121212";
+    link.style.textDecoration="none";
+    link.target="_blank"; // optional: open in new tab
+    btn.appendChild(link);
+    careerTips.appendChild(btn);
+    careerTips.innerHTML += "<br>";
+  });
+
+  document.getElementById('quizResult').style.display="block";
+}
+
+function shareResult(){
+  const text = document.getElementById('careerTips').innerText;
+  if(navigator.share){
+    navigator.share({title:"My Career Quiz Result 🚀", text});
+  } else {
+    navigator.clipboard.writeText(text);
+    alert("Copied to clipboard! ✅");
+  }
+}
+
+document.getElementById("aiBtn").addEventListener("click", ()=>{
+  const insightsBox = document.getElementById("aiInsights");
+  insightsBox.style.display="block";
+  insightsBox.innerText = "Gemini AI generating insights... ⏳";
+
+  setTimeout(()=>{
+    insightsBox.innerText =
+      "✨ Gemini AI Insights ✨\n" +
+      "- Strong Technical & Analytical → Data, AI, Software Dev\n" +
+      "- Creativity & Communication → UX, Marketing, Entrepreneur\n" +
+      "- Leadership & Adaptability → Entrepreneurial & Management roles\n" +
+      "- Tip: Build portfolio, network, and take micro-projects for growth 🚀";
+  },1500);
+
+  const useLocal = confirm("Open local Gemini AI? Cancel for online.");
+  if(useLocal) { window.location.href = "gemini.html"; } 
+  else { window.open("https://gemini.google.com/app", "_blank"); }
+});
+
+showQuestion(currentQ);
+</script>
+</body>
+</html>
