@@ -4,7 +4,7 @@ package-lock.json
 
 # Env & secrets
 *.env
-*.json   # hides all JSON with secrets, including client_secret_*.json
+*.json  # for client_secret_*.json or any sensitive JSON
 
 # Build / archives
 *.zip

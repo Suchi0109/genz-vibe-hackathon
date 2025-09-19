@@ -91,14 +91,15 @@ import { getFirestore, collection, query, where, getDocs } from "https://www.gst
 
 // Firebase (safe to keep public)
 const firebaseConfig = {
-  apiKey: "AIzaSyCv0nOOOqO2Te_RH3ZHOjmq-Q2VKLEYfCs",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "career-advisor-ai-470418.firebaseapp.com",
   projectId: "career-advisor-ai-470418",
-  storageBucket: "career-advisor-ai-470418.appspot.com",
+  storageBucket: "career-advisor-ai-470418.firebasestorage.app",
   messagingSenderId: "768473952136",
   appId: "1:768473952136:web:10b2834534de3cdfed543d",
   measurementId: "G-3VT3TJ9886"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
