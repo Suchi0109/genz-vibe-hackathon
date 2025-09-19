@@ -1,0 +1,12 @@
+# Node stuff
+node_modules/
+package-lock.json
+
+# Env & secrets
+*.env
+*.json   # hides all JSON with secrets, including client_secret_*.json
+
+# Build / archives
+*.zip
+dist/
+build/
