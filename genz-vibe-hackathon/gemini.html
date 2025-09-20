@@ -95,13 +95,13 @@ import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/fi
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCv0nOOOqO2Te_RH3ZHOjmq-Q2VKLEYfCs",
-  authDomain: "career-advisor-ai-470418.firebaseapp.com",
-  projectId: "career-advisor-ai-470418",
-  storageBucket: "career-advisor-ai-470418.appspot.com",
-  messagingSenderId: "768473952136",
-  appId: "1:768473952136:web:10b2834534de3cdfed543d",
-  measurementId: "G-3VT3TJ9886"
+  apiKey: "FIREBASE_API_KEY",
+  authDomain: "PROJECT_AUTHO_DOMAIN",
+  projectId: "PROJECT_ID",
+  storageBucket: "STORAGE_BUCKET",
+  messagingSenderId: "MESSAGNG_ID",
+  appId: "APP_ID",
+  measurementId: "MEASUREMENT_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -151,7 +151,7 @@ logoutBtn.onclick = async () => { await signOut(auth); window.location.href = "l
 sendBtn.onclick = sendMessage;
 input.addEventListener("keydown", e => { if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
 
-const DEFAULT_API_KEY = "AIzaSyC3FYPYeNCIgJqLLQICawgynjHb9PLlr9c"; 
+const DEFAULT_API_KEY = "GEMINI_API_KEY"; 
 let apiKey = localStorage.getItem("apiKey") || DEFAULT_API_KEY;
 
 async function sendMessage(){

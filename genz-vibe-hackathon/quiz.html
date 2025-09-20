@@ -98,7 +98,6 @@ footer { text-align:center; padding:2rem; background:#1f1f1f; border-top:2px sol
     <div id="aiInsights" style="display:none;"></div>
     <button onclick="location.reload()">Try Again 🔄</button>
     <button onclick="shareResult()">Share 📲</button>
-    <button id="aiBtn">Get AI Insights 🤖</button>
   </div>
 </div>
 
@@ -213,7 +212,7 @@ function showResult(){
     link.innerText = "Explore 🔍";
     link.style.color="#121212";
     link.style.textDecoration="none";
-    link.target="_blank"; // optional: open in new tab
+    link.target="_blank"; 
     btn.appendChild(link);
     careerTips.appendChild(btn);
     careerTips.innerHTML += "<br>";
@@ -231,25 +230,6 @@ function shareResult(){
     alert("Copied to clipboard! ✅");
   }
 }
-
-document.getElementById("aiBtn").addEventListener("click", ()=>{
-  const insightsBox = document.getElementById("aiInsights");
-  insightsBox.style.display="block";
-  insightsBox.innerText = "Gemini AI generating insights... ⏳";
-
-  setTimeout(()=>{
-    insightsBox.innerText =
-      "✨ Gemini AI Insights ✨\n" +
-      "- Strong Technical & Analytical → Data, AI, Software Dev\n" +
-      "- Creativity & Communication → UX, Marketing, Entrepreneur\n" +
-      "- Leadership & Adaptability → Entrepreneurial & Management roles\n" +
-      "- Tip: Build portfolio, network, and take micro-projects for growth 🚀";
-  },1500);
-
-  const useLocal = confirm("Open local Gemini AI? Cancel for online.");
-  if(useLocal) { window.location.href = "gemini.html"; } 
-  else { window.open("https://gemini.google.com/app", "_blank"); }
-});
 
 showQuestion(currentQ);
 </script>

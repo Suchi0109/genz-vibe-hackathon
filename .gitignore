@@ -3,10 +3,17 @@ node_modules/
 package-lock.json
 
 # Env & secrets
-*.env
-*.json  # for client_secret_*.json or any sensitive JSON
+*.env                  # your .env file with keys
+*.json                 # any sensitive JSON (like Firebase service account files)
+firebaseConfig.js      # explicitly ignore Firebase config if separate
+geminiKey.js           # explicitly ignore Gemini API key file
 
 # Build / archives
 *.zip
 dist/
 build/
+
+# VS Code settings
+.vscode/
+
+FirebaseConfig.js
